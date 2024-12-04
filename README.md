@@ -61,6 +61,45 @@ def compute_idf(term,documents):
     return idf
 def compute_tfidf(documents):
     result = []
+    for document in documents:
+        dict = {}
+        unique_terms = set(document)
+
+        for term in unique_terms:
+            tf = compute_tf(term,document)
+            idf = compute_idf(term,documents)
+            dict[term] = tf * idf
+
+        result.append(dict)
+
+    return result
+documents = [
+    ["this", "is", "a", "sample", "document"],
+    ["this", "document", "is", "another", "example", "document"],
+    ["one", "more", "sample", "document"]
+]
+
+tfidf_values = compute_tfidf(documents)
+tfidf_values    
+```
+
+
+```python
+from math import log
+
+def compute_tf(term,documents):
+    return documents.count(term)/len(documents)
+
+def compute_idf(term,documents):
+    count = 0
+    for i in documents:
+        if term in i:
+            count +=1
+    total_documents = len(documents)
+    idf = log(total_documents/(1+count))+1
+    return idf
+def compute_tfidf(documents):
+    result = []
     for i in documents:
         dict = {}
         unique_terms = set(i)
