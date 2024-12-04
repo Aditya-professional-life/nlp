@@ -46,74 +46,42 @@ print("POS Tags:", pos_tags)
 
 ## Code 2: N-Gram Language Model
 ```python
-from collections import defaultdict, Counter
-import math
+from math import log
 
-class NGramLanguageModel:
-    def __init__(self, n):
-        self.n = n  # The size of the n-grams
-        self.ngrams = defaultdict(Counter)  # Stores n-grams and their counts
-        self.context_counts = Counter()  # Stores context counts for probability calculations
+def compute_tf(term, document):
+    return document.count(term) / len(document)
 
-    def tokenize(self, text):
-        # Tokenize text into words and add special start/end tokens
-        tokens = text.lower().split()
-        tokens = ['<s>'] * (self.n - 1) + tokens + ['</s>']
-        return tokens
+def compute_idf(term, corpus):
+    doc_count = sum(1 for doc in corpus if term in doc)
+    return log(len(corpus) / (1 + doc_count)) + 1  # Adding 1 to log to avoid negative values
 
-    def train(self, corpus):
-        # Train the model with the given corpus
-        for sentence in corpus:
-            tokens = self.tokenize(sentence)
-            for i in range(len(tokens) - self.n + 1):
-                context = tuple(tokens[i:i + self.n - 1])
-                word = tokens[i + self.n - 1]
-                self.ngrams[context][word] += 1
-                self.context_counts[context] += 1
+def compute_tfidf(corpus):
+    tfidf = []  # List to store TF-IDF values for each document
+    
+    for document in corpus:  # Loop through each document in the corpus
+        tfidf_doc = {}  # Dictionary to store TF-IDF values for terms in the current document
+        
+        for term in set(document):  # Loop through unique terms in the document
+            tf = compute_tf(term, document)  # Calculate TF for the term
+            idf = compute_idf(term, corpus)  # Calculate IDF for the term
+            tfidf_doc[term] = tf * idf  # Calculate TF-IDF by multiplying TF and IDF
+        
+        tfidf.append(tfidf_doc)  # Add the TF-IDF values for this document to the list
+    
+    return tfidf  # Return the list containing TF-IDF values for all documents
 
-    def calculate_probability(self, context, word):
-        # Calculate the probability of a word given its context
-        if context in self.ngrams:
-            word_count = self.ngrams[context][word]
-            context_count = self.context_counts[context]
-            return word_count / context_count
-        return 0.0
+corpus = [
+    ["this", "is", "a", "sample", "document"],
+    ["this", "document", "is", "another", "example", "document"],
+    ["one", "more", "sample", "document"]
+]
 
-    def generate_sentence(self, max_words=20):
-        # Generate a sentence using the language model
-        context = ('<s>',) * (self.n - 1)
-        sentence = list(context)
+tfidf_values = compute_tfidf(corpus)
+for i, doc_tfidf in enumerate(tfidf_values):
+    print(f"Document {i + 1} TF-IDF:")
+    for term, value in sorted(doc_tfidf.items()):
+        print(f"  {term}: {value:.4f}")
 
-        for _ in range(max_words):
-            if context not in self.ngrams:
-                break
-            word = max(self.ngrams[context], key=self.ngrams[context].get)  # Greedy selection
-            if word == '</s>':
-                break
-            sentence.append(word)
-            context = tuple(sentence[-(self.n - 1):])
-
-        return ' '.join(sentence[(self.n - 1):])  # Exclude the start tokens
-
-# Example usage                                                                                    
-if __name__ == "__main__":
-    corpus = [
-        "I love natural language processing.",
-        "Language models are a part of AI.",
-        "I love building AI models.",
-    ]
-
-    ngram_model = NGramLanguageModel(n=2)  # Bigram model
-    ngram_model.train(corpus)
-
-    # Test the model
-    context = ('i',)
-    word = 'love'
-    prob = ngram_model.calculate_probability(context, word)
-    print(f"Probability of '{word}' given context {context}: {prob:.4f}")
-
-    # Generate a sentence
-    print("Generated Sentence:", ngram_model.generate_sentence())
 ```
 
 ---
