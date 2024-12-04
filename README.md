@@ -1,3 +1,14 @@
+Here's a well-formatted version of your code for a GitHub `README.md` file. I've added syntax highlighting, headers for each section, and preserved the structure for easy readability and copy-pasting.
+
+```markdown
+# NLP Examples with NLTK and Gensim
+
+This README contains sample Python code for NLP tasks using libraries like NLTK and Gensim. Each section demonstrates a specific functionality.
+
+---
+
+## Code 1: Basic NLP Tasks with NLTK
+```python
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -29,120 +40,12 @@ pos_tags = nltk.pos_tag(filtered_tokens)
 print("Original Tokens:", tokens)
 print("Filtered Tokens (without stop words):", filtered_tokens)
 print("POS Tags:", pos_tags)
+```
 
+---
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import math
-from sklearn.feature_extraction.text import CountVectorizer
-
-# Input documents
-documents = [
-    "Natural Language Processing with Python is interesting.",
-    "Python helps in analyzing and understanding human language.",
-    "TF-IDF is a statistical measure for text analysis.",
-]
-
-# Step 1: Tokenization and TF Calculation
-def compute_tf(doc):
-    tf_dict = {}
-    total_words = doc.split()
-    total_count = len(total_words)
-    for word in total_words:
-        tf_dict[word] = tf_dict.get(word, 0) + 1
-    # Normalize by total word count
-    for word in tf_dict:
-        tf_dict[word] = tf_dict[word] / total_count
-    return tf_dict
-
-# Step 2: IDF Calculation
-def compute_idf(corpus):
-    idf_dict = {}
-    total_docs = len(corpus)
-    for doc in corpus:
-        for word in set(doc.split()):
-            idf_dict[word] = idf_dict.get(word, 0) + 1
-    for word in idf_dict:
-        idf_dict[word] = math.log(total_docs / idf_dict[word]) + 1
-    return idf_dict
-
-# Step 3: TF-IDF Calculation
-def compute_tfidf(tf_dict, idf_dict):
-    tfidf_dict = {}
-    for word, tf_value in tf_dict.items():
-        tfidf_dict[word] = tf_value * idf_dict.get(word, 0)
-    return tfidf_dict
-
-# Preprocess: Convert documents to lowercase for consistency
-documents = [doc.lower() for doc in documents]
-
-# Calculate TF, IDF, and TF-IDF
-tf_results = [compute_tf(doc) for doc in documents]
-idf_result = compute_idf(documents)
-tfidf_results = [compute_tfidf(tf, idf_result) for tf in tf_results]
-
-# Display results
-for i, tfidf in enumerate(tfidf_results):
-    print(f"Document {i+1} TF-IDF:")
-    for word, score in tfidf.items():
-        print(f"  {word}: {score:.4f}")
-    print()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## Code 2: N-Gram Language Model
+```python
 from collections import defaultdict, Counter
 import math
 
@@ -211,20 +114,17 @@ if __name__ == "__main__":
 
     # Generate a sentence
     print("Generated Sentence:", ngram_model.generate_sentence())
+```
 
+---
 
+## Code 3: Word Embeddings with Gensim
 
-
-
-
-
-
-
-
+### Part 1: Word2Vec
+```python
 from gensim.models import Word2Vec
 from nltk.tokenize import word_tokenize
 import nltk
-
 
 nltk.download("punkt")
 
@@ -234,13 +134,11 @@ corpus = [
     "Deep learning models have revolutionized text analysis.",
 ]
 
-
 tokenized_corpus = []
 for sentence in corpus:
     sentence_lower = sentence.lower()
     tokenized_sentence = word_tokenize(sentence_lower)
     tokenized_corpus.append(tokenized_sentence)
-
 
 word2vec_model = Word2Vec(sentences=tokenized_corpus, vector_size=100, window=5, min_count=1, workers=4)
 
@@ -249,8 +147,10 @@ if word in word2vec_model.wv:
     print(f"Word2Vec embedding for '{word}':\n{word2vec_model.wv[word]}")
 else:
     print(f"Word '{word}' not in vocabulary.")
+```
 
-
+### Part 2: GloVe Embeddings
+```python
 import gensim.downloader as api
 
 # Download pre-trained GloVe embeddings
@@ -259,8 +159,10 @@ model = api.load("glove-wiki-gigaword-100")
 # Get the vector representation of a word
 word_vector = model['dog']
 print(word_vector)
+```
 
-
+### Part 3: FastText
+```python
 from gensim.models import FastText
 
 # Sample text corpus (or load from a file)
@@ -276,3 +178,9 @@ model = FastText(sentences, min_count=1, vector_size=100, window=5)
 # Get the vector representation of a word (optional)
 word_vector = model.wv['dog']
 print(word_vector)
+```
+
+---
+
+Each section is self-contained and demonstrates key NLP functionalities.
+```
