@@ -46,39 +46,14 @@ print("POS Tags:", pos_tags)
 
 ## Code 2: N-Gram Language Model
 ```python
-def compute_tf(term,document):
-    return document.count(term)/len(document)
-
-def compute_idf(term,document):
-    doc_count = sum(term in doc for doc in document)
-    return log(len(document)/(1+doc_count))+1
-    
-def compute_tfidf(documents):
-    result = []
-    for document in documents:
-        dict = {}
-        unique_terms = set(document)
-
-        for term in unique_terms:
-            tf = compute_tf(term, document)
-            idf = compute_idf(term,documents)
-            dict[term] = tf*idf
-
-        result.append(dict)
-
-    return result
-
-
 documents = [
     ["this", "is", "a", "sample", "document"],
     ["this", "document", "is", "another", "example", "document"],
     ["one", "more", "sample", "document"]
 ]
-tfidf = compute_tfidf(documents)
-for idx, dict in enumerate(tfidf):
-    print(f"Document {idx+1} TF-IDF:")
-    for term, value in sorted(dict.items()):
-        print(f"  {term}: {value:.4f}")
+
+tfidf_values = compute_tfidf(documents)
+
 ```
 
 ---
