@@ -46,42 +46,39 @@ print("POS Tags:", pos_tags)
 
 ## Code 2: N-Gram Language Model
 ```python
-from math import log
+def compute_tf(term,document):
+    return document.count(term)/len(document)
 
-def compute_tf(term, document):
-    return document.count(term) / len(document)
-
-def compute_idf(term, corpus):
-    doc_count = sum(1 for doc in corpus if term in doc)
-    return log(len(corpus) / (1 + doc_count)) + 1  # Adding 1 to log to avoid negative values
-
-def compute_tfidf(corpus):
-    tfidf = []  # List to store TF-IDF values for each document
+def compute_idf(term,document):
+    doc_count = sum(term in doc for doc in document)
+    return log(len(document)/(1+doc_count))+1
     
-    for document in corpus:  # Loop through each document in the corpus
-        tfidf_doc = {}  # Dictionary to store TF-IDF values for terms in the current document
-        
-        for term in set(document):  # Loop through unique terms in the document
-            tf = compute_tf(term, document)  # Calculate TF for the term
-            idf = compute_idf(term, corpus)  # Calculate IDF for the term
-            tfidf_doc[term] = tf * idf  # Calculate TF-IDF by multiplying TF and IDF
-        
-        tfidf.append(tfidf_doc)  # Add the TF-IDF values for this document to the list
-    
-    return tfidf  # Return the list containing TF-IDF values for all documents
+def compute_tfidf(documents):
+    result = []
+    for document in documents:
+        dict = {}
+        unique_terms = set(document)
 
-corpus = [
+        for term in unique_terms:
+            tf = compute_tf(term, document)
+            idf = compute_idf(term,documents)
+            dict[term] = tf*idf
+
+        result.append(dict)
+
+    return result
+
+
+documents = [
     ["this", "is", "a", "sample", "document"],
     ["this", "document", "is", "another", "example", "document"],
     ["one", "more", "sample", "document"]
 ]
-
-tfidf_values = compute_tfidf(corpus)
-for i, doc_tfidf in enumerate(tfidf_values):
-    print(f"Document {i + 1} TF-IDF:")
-    for term, value in sorted(doc_tfidf.items()):
+tfidf = compute_tfidf(documents)
+for idx, dict in enumerate(tfidf):
+    print(f"Document {idx+1} TF-IDF:")
+    for term, value in sorted(dict.items()):
         print(f"  {term}: {value:.4f}")
-
 ```
 
 ---
