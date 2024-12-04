@@ -61,12 +61,12 @@ def compute_idf(term,documents):
     return idf
 def compute_tfidf(documents):
     result = []
-    for document in documents:
+    for i in documents:
         dict = {}
-        unique_terms = set(document)
+        unique_terms = set(i)
 
         for term in unique_terms:
-            tf = compute_tf(term,document)
+            tf = compute_tf(term,i)
             idf = compute_idf(term,documents)
             dict[term] = tf * idf
 
